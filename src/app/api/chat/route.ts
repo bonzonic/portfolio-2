@@ -34,7 +34,11 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "history must be an array" }, { status: 400 });
   }
 
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+  if (!process.env.GEMINI_API_KEY) {
+    return Response.json({ error: "Service unavailable" }, { status: 503 });
+  }
+
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   const model = genAI.getGenerativeModel({
     model: "gemini-1.5-flash",
     systemInstruction: buildSystemPrompt(),
@@ -46,24 +50,28 @@ export async function POST(request: NextRequest) {
     parts: [{ text: msg.content }],
   }));
 
-  const chat = model.startChat({ history: geminiHistory });
-  const result = await chat.sendMessageStream(message.trim());
+  try {
+    const chat = model.startChat({ history: geminiHistory });
+    const result = await chat.sendMessageStream(message.trim());
 
-  const stream = new ReadableStream({
-    async start(controller) {
-      try {
-        for await (const chunk of result.stream) {
-          controller.enqueue(new TextEncoder().encode(chunk.text()));
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const chunk of result.stream) {
+            controller.enqueue(new TextEncoder().encode(chunk.text()));
+          }
+        } catch {
+          controller.error(new Error("Stream interrupted"));
+        } finally {
+          controller.close();
         }
-      } catch {
-        controller.error(new Error("Stream interrupted"));
-      } finally {
-        controller.close();
-      }
-    },
-  });
+      },
+    });
 
-  return new Response(stream, {
-    headers: { "Content-Type": "text/plain; charset=utf-8" },
-  });
+    return new Response(stream, {
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
+  } catch {
+    return Response.json({ error: "Failed to reach AI service" }, { status: 502 });
+  }
 }

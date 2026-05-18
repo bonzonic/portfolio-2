@@ -32,7 +32,7 @@ export function ChatWidget() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: userContent,
-          history: updatedMessages.slice(-MAX_HISTORY_SENT),
+          history: baseMessages.slice(-MAX_HISTORY_SENT),
         }),
       });
 
