@@ -153,14 +153,17 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
         isOpen ? "w-65" : "w-0"
       }`}
     >
-      <aside className="flex flex-col w-65 h-screen bg-sidebar border-r border-border">
+      <aside
+        inert={!isOpen || undefined}
+        className="flex flex-col w-65 h-screen bg-sidebar border-r border-border"
+      >
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 py-3 shrink-0">
           <div className="flex items-center gap-2">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden className="text-accent">
               <path
                 d="M9 2v14M2 9h14M4 4l10 10M14 4L4 14"
-                stroke="#c9a96e"
+                stroke="currentColor"
                 strokeWidth="1.8"
                 strokeLinecap="round"
               />
@@ -191,7 +194,7 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
             if (isSection(entry)) {
               return (
                 <div
-                  key={i}
+                  key={entry.section}
                   className="px-2 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-dim"
                 >
                   {entry.section}
