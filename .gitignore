@@ -36,3 +36,9 @@ next-env.d.ts
 
 .vercel
 .env*.local
+
+# claude
+/docs
+.superpowers
+.claude
+.playwright-mcp
