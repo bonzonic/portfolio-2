@@ -21,12 +21,12 @@ export function ChatInterface() {
       {/* Suggested prompts */}
       <div className="flex flex-wrap justify-center gap-2 w-full max-w-160 mb-5">
         {suggestedPrompts.map((prompt) => (
-          <button
+          <span
             key={prompt}
-            className="px-3.5 py-1.5 rounded-full text-xs text-muted border border-border bg-surface hover:bg-white/6 hover:text-primary transition-colors"
+            className="px-3.5 py-1.5 rounded-full text-xs text-muted border border-border bg-surface"
           >
             {prompt}
-          </button>
+          </span>
         ))}
       </div>
 
