@@ -1,7 +1,9 @@
+import { ChatSection } from "@/app/sections/chat-section";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold">Portfolio v2</h1>
+    <main>
+      <ChatSection />
     </main>
   );
 }
