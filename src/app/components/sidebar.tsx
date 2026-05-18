@@ -190,7 +190,7 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
 
         {/* Nav */}
         <nav className="flex-1 px-2 py-1 overflow-y-auto">
-          {navEntries.map((entry, i) => {
+          {navEntries.map((entry) => {
             if (isSection(entry)) {
               return (
                 <div
