@@ -1,16 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Sidebar } from "@/app/components/sidebar";
+import { Sidebar, HamburgerIcon } from "@/app/components/sidebar";
 import { ContactModal } from "@/app/components/contact-modal";
-
-function HamburgerIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
 
 export default function PortfolioLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
