@@ -9,13 +9,15 @@ const suggestedPrompts = [
 
 export function ChatInterface() {
   return (
-    <div className="flex flex-col h-full items-center justify-end pb-6 px-4">
+    <div className="flex flex-col min-h-full items-center justify-end p-10">
       {/* Greeting — scrolls away naturally once messages appear */}
       <div className="w-full max-w-160 mb-6 text-center">
         <h1 className="text-2xl font-semibold text-primary tracking-tight mb-2">
           What can I help with?
         </h1>
-        <p className="text-sm text-dim">Ask me anything about Nicholas&apos;s work and experience</p>
+        <p className="text-sm text-dim">
+          Ask me anything about Nicholas&apos;s work and experience
+        </p>
       </div>
 
       {/* Suggested prompts */}

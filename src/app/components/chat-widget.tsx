@@ -104,7 +104,7 @@ export function ChatWidget() {
     <div className="flex flex-col gap-4">
       {/* Message thread */}
       {messages.length > 0 && (
-        <div className="flex flex-col gap-4 max-h-[50vh] overflow-y-auto px-1">
+        <div className="flex flex-col gap-2 px-1">
           {messages.map((msg, i) => (
             <div
               key={i}
@@ -117,13 +117,16 @@ export function ChatWidget() {
                     : "text-primary rounded-tl-sm"
                 }`}
               >
-                {msg.content || (msg.role === "assistant" && isLoading ? (
-                  <span className="flex gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-muted animate-bounce [animation-delay:0ms]" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-muted animate-bounce [animation-delay:150ms]" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-muted animate-bounce [animation-delay:300ms]" />
-                  </span>
-                ) : "")}
+                {msg.content ||
+                  (msg.role === "assistant" && isLoading ? (
+                    <span className="flex gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-muted animate-bounce [animation-delay:0ms]" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-muted animate-bounce [animation-delay:150ms]" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-muted animate-bounce [animation-delay:300ms]" />
+                    </span>
+                  ) : (
+                    ""
+                  ))}
               </div>
             </div>
           ))}
@@ -145,7 +148,7 @@ export function ChatWidget() {
       )}
 
       {/* Input bar */}
-      <div className="flex items-end gap-2 bg-surface border border-border rounded-[14px] px-4 py-3 focus-within:border-white/20 transition-colors">
+      <div className="flex items-center gap-2 bg-surface border border-border rounded-[14px] px-4 py-3 focus-within:border-white/20 transition-colors">
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}

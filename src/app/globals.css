@@ -16,4 +16,29 @@
     background-color: var(--color-main);
     color: var(--color-primary);
   }
+
+  /* Scrollbar — Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-dim) transparent;
+  }
+
+  /* Scrollbar — Chromium / Safari */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-dim);
+    border-radius: 99px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-muted);
+  }
 }

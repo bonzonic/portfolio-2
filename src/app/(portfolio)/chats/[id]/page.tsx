@@ -7,22 +7,20 @@ export default async function ChatPage({ params }: { params: Promise<{ id: strin
   if (!chat) notFound();
 
   return (
-    <div className="h-full overflow-y-auto">
-      <div className="max-w-150 mx-auto px-6 py-8 flex flex-col gap-5">
-        {chat.messages.map((msg, i) => (
-          <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div
-              className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
-                msg.role === "user"
-                  ? "bg-surface text-primary rounded-tr-sm"
-                  : "text-primary rounded-tl-sm"
-              }`}
-            >
-              {msg.content}
-            </div>
+    <div className="max-w-150 mx-auto px-6 pt-14 pb-10 flex flex-col gap-5">
+      {chat.messages.map((msg, i) => (
+        <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+          <div
+            className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
+              msg.role === "user"
+                ? "bg-surface text-primary rounded-tr-sm"
+                : "text-primary rounded-tl-sm"
+            }`}
+          >
+            {msg.content}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 }
