@@ -120,7 +120,7 @@ const backgroundNavItems: NavItem[] = [
   { label: "Tools", href: "/tools", icon: <ToolsIcon /> },
 ];
 
-function NavLink({ item, pathname, isOpen }: { item: NavItem; pathname: string; isOpen: boolean }) {
+function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
   const isActive = pathname.startsWith(item.href);
   return (
     <Link
@@ -130,19 +130,15 @@ function NavLink({ item, pathname, isOpen }: { item: NavItem; pathname: string; 
       }`}
     >
       <span className={isActive ? "text-primary" : "text-muted"}>{item.icon}</span>
-      <span className={`transition-opacity duration-100 ${isOpen ? "opacity-100" : "opacity-0"}`}>
-        {item.label}
-      </span>
+      <span>{item.label}</span>
     </Link>
   );
 }
 
-function SectionLabel({ label, isOpen }: { label: string; isOpen: boolean }) {
+function SectionLabel({ label }: { label: string }) {
   return (
     <div className="px-2 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-dim">
-      <span className={`transition-opacity duration-100 ${isOpen ? "opacity-100" : "opacity-0"}`}>
-        {label}
-      </span>
+      <span>{label}</span>
     </div>
   );
 }
@@ -169,7 +165,7 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
-      <aside className="flex flex-col w-65 h-screen bg-sidebar border-r border-border">
+      <aside className="flex flex-col w-65 h-full bg-sidebar border-r border-border">
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 py-3 shrink-0">
           <span className="text-sm font-semibold text-primary tracking-tight">Nicholas Wong</span>
@@ -194,12 +190,12 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
             <span>New Chat</span>
           </button>
 
-          <SectionLabel label="Background" isOpen={true} />
+          <SectionLabel label="Background" />
           {backgroundNavItems.map((item) => (
-            <NavLink key={item.href} item={item} pathname={pathname} isOpen={true} />
+            <NavLink key={item.href} item={item} pathname={pathname} />
           ))}
 
-          <SectionLabel label="Recents" isOpen={true} />
+          <SectionLabel label="Recents" />
           {liveChats.map((chat) => {
             const isActive = pathname === `/c/${chat.id}`;
             return (
