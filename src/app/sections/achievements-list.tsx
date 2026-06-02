@@ -1,3 +1,5 @@
+"use client";
+
 import { achievements } from "@/app/data/achievements";
 
 export function AchievementsList() {

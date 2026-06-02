@@ -1,3 +1,6 @@
+"use client";
+
+import Link from "next/link";
 import { projects } from "@/app/data/projects";
 
 export function ProjectsGrid() {
@@ -10,9 +13,10 @@ export function ProjectsGrid() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {projects.map((project) => (
-          <div
-            key={project.name}
-            className="bg-surface border border-border rounded-xl p-5 flex flex-col gap-3 hover:border-white/20 transition-colors"
+          <Link
+            key={project.id}
+            href={`/projects/${project.id}`}
+            className="group bg-surface border border-border rounded-xl p-5 flex flex-col gap-3 hover:border-white/20 transition-colors"
           >
             <div>
               <h2 className="text-[14px] font-semibold text-primary">{project.name}</h2>
@@ -30,12 +34,16 @@ export function ProjectsGrid() {
               ))}
             </div>
 
-            {project.url && (
-              <div className="flex gap-3 pt-1 border-t border-border">
-                <a
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+            <div className="flex items-center justify-between pt-1 border-t border-border">
+              <span className="text-[12px] text-muted group-hover:text-primary transition-colors">
+                View details →
+              </span>
+              {project.url && (
+                <span
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.open(project.url, "_blank", "noopener,noreferrer");
+                  }}
                   className="text-[12px] text-muted hover:text-primary transition-colors flex items-center gap-1"
                 >
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -47,11 +55,11 @@ export function ProjectsGrid() {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  View
-                </a>
-              </div>
-            )}
-          </div>
+                  Live
+                </span>
+              )}
+            </div>
+          </Link>
         ))}
       </div>
     </div>
