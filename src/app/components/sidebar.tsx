@@ -127,6 +127,8 @@ function ComposeIcon() {
 
 const topNavItems: NavItem[] = [{ label: "New Chat", href: "/", icon: <NewChatIcon /> }];
 
+const mainNavItems: NavItem[] = [];
+
 const backgroundNavItems: NavItem[] = [
   { label: "Projects", href: "/projects", icon: <ProjectsIcon /> },
   { label: "Work Experience", href: "/work-experience", icon: <WorkIcon /> },
@@ -157,76 +159,154 @@ function SectionLabel({ label }: { label: string }) {
   );
 }
 
+function CollapsedNavIcon({ item, pathname }: { item: NavItem; pathname: string }) {
+  const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+  return (
+    <Link
+      href={item.href}
+      className={`group relative flex items-center justify-center w-9 h-9 rounded-lg transition-colors ${
+        isActive ? "bg-white/9 text-primary" : "text-muted hover:bg-white/6 hover:text-primary"
+      }`}
+    >
+      <span className={isActive ? "text-primary" : "text-muted group-hover:text-primary"}>
+        {item.icon}
+      </span>
+      <span className="pointer-events-none absolute left-full ml-2 top-1/2 -translate-y-1/2 rounded-md border border-border bg-surface px-2 py-1 text-xs text-primary whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50">
+        {item.label}
+      </span>
+    </Link>
+  );
+}
+
 export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
   const pathname = usePathname();
 
   return (
     <div
       className={`shrink-0 overflow-hidden transition-[width] duration-200 ease-in-out ${
-        isOpen ? "w-65" : "w-0"
+        isOpen ? "w-65" : "w-[52px]"
       }`}
     >
-      <aside
-        inert={!isOpen || undefined}
-        className="flex flex-col w-65 h-screen bg-sidebar border-r border-border"
-      >
-        {/* Top bar */}
-        <div className="flex items-center justify-between px-4 py-3 shrink-0">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-primary tracking-tight">Nicholas Wong</span>
+      {isOpen ? (
+        <aside className="flex flex-col w-65 h-screen bg-sidebar border-r border-border">
+          {/* Top bar */}
+          <div className="flex items-center justify-between px-4 py-3 shrink-0">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold text-primary tracking-tight">Nicholas Wong</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={onToggle}
+                className="p-1.5 rounded-md text-muted hover:text-primary hover:bg-surface transition-colors"
+                aria-label="Close sidebar"
+              >
+                <HamburgerIcon />
+              </button>
+            </div>
           </div>
-          <div className="flex items-center gap-1">
+
+          {/* Nav */}
+          <nav className="flex-1 px-2 py-1 overflow-y-auto">
+            {topNavItems.map((item) => (
+              <NavLink key={item.href} item={item} pathname={pathname} />
+            ))}
+
+            <SectionLabel label="Recents" />
+            {curatedChats.map((chat) => {
+              const isActive = pathname === `/chats/${chat.id}`;
+              return (
+                <Link
+                  key={chat.id}
+                  href={`/chats/${chat.id}`}
+                  className={`block px-2.5 py-1.75 rounded-lg text-[13.5px] truncate transition-colors ${
+                    isActive
+                      ? "bg-white/9 text-primary"
+                      : "text-muted hover:bg-white/6 hover:text-primary"
+                  }`}
+                >
+                  {chat.title}
+                </Link>
+              );
+            })}
+
+            {mainNavItems.map((item) => (
+              <NavLink key={item.href} item={item} pathname={pathname} />
+            ))}
+
+            <SectionLabel label="Background" />
+            {backgroundNavItems.map((item) => (
+              <NavLink key={item.href} item={item} pathname={pathname} />
+            ))}
+          </nav>
+
+          {/* Bottom: Contact */}
+          <div className="px-2 py-2 border-t border-border shrink-0">
+            <button
+              onClick={onContactClick}
+              className="flex items-center gap-2.5 w-full px-2.5 py-1.75 rounded-lg text-[13.5px] text-muted hover:bg-white/6 hover:text-primary transition-colors"
+            >
+              <ContactIcon />
+              Contact
+            </button>
+          </div>
+        </aside>
+      ) : (
+        <aside className="flex flex-col w-[52px] h-screen bg-sidebar border-r border-border">
+          {/* Top: toggle */}
+          <div className="flex items-center justify-center py-3 shrink-0">
             <button
               onClick={onToggle}
               className="p-1.5 rounded-md text-muted hover:text-primary hover:bg-surface transition-colors"
-              aria-label="Close sidebar"
+              aria-label="Open sidebar"
             >
               <HamburgerIcon />
             </button>
           </div>
-        </div>
 
-        {/* Nav */}
-        <nav className="flex-1 px-2 py-1 overflow-y-auto">
-          {topNavItems.map((item) => (
-            <NavLink key={item.href} item={item} pathname={pathname} />
-          ))}
+          {/* Nav: icons only */}
+          <nav className="flex-1 flex flex-col items-center px-2 py-1 gap-0.5 overflow-y-auto">
+            {topNavItems.map((item) => (
+              <CollapsedNavIcon key={item.href} item={item} pathname={pathname} />
+            ))}
 
-          <SectionLabel label="Background" />
-          {backgroundNavItems.map((item) => (
-            <NavLink key={item.href} item={item} pathname={pathname} />
-          ))}
+            {/* Dot stack: Recents indicator */}
+            <button
+              onClick={onToggle}
+              className="group relative flex flex-col items-center justify-center w-9 gap-[3px] py-2 rounded-lg text-muted hover:bg-white/6 transition-colors"
+              aria-label="Expand sidebar to see recent chats"
+            >
+              <span className="w-[5px] h-[5px] rounded-full bg-[#666]" />
+              <span className="w-[5px] h-[5px] rounded-full bg-[#555]" />
+              <span className="w-[5px] h-[5px] rounded-full bg-[#444]" />
+              <span className="pointer-events-none absolute left-full ml-2 top-1/2 -translate-y-1/2 rounded-md border border-border bg-surface px-2 py-1 text-xs text-primary whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                Recents
+              </span>
+            </button>
 
-          <SectionLabel label="Recents" />
-          {curatedChats.map((chat) => {
-            const isActive = pathname === `/chats/${chat.id}`;
-            return (
-              <Link
-                key={chat.id}
-                href={`/chats/${chat.id}`}
-                className={`block px-2.5 py-1.75 rounded-lg text-[13.5px] truncate transition-colors ${
-                  isActive
-                    ? "bg-white/9 text-primary"
-                    : "text-muted hover:bg-white/6 hover:text-primary"
-                }`}
-              >
-                {chat.title}
-              </Link>
-            );
-          })}
-        </nav>
+            {mainNavItems.map((item) => (
+              <CollapsedNavIcon key={item.href} item={item} pathname={pathname} />
+            ))}
 
-        {/* Bottom: Contact */}
-        <div className="px-2 py-2 border-t border-border shrink-0">
-          <button
-            onClick={onContactClick}
-            className="flex items-center gap-2.5 w-full px-2.5 py-1.75 rounded-lg text-[13.5px] text-muted hover:bg-white/6 hover:text-primary transition-colors"
-          >
-            <ContactIcon />
-            Contact
-          </button>
-        </div>
-      </aside>
+            {backgroundNavItems.map((item) => (
+              <CollapsedNavIcon key={item.href} item={item} pathname={pathname} />
+            ))}
+          </nav>
+
+          {/* Bottom: Contact */}
+          <div className="flex justify-center py-2 border-t border-border shrink-0">
+            <button
+              onClick={onContactClick}
+              className="group relative flex items-center justify-center w-9 h-9 rounded-lg text-muted hover:bg-white/6 hover:text-primary transition-colors"
+              aria-label="Contact"
+            >
+              <ContactIcon />
+              <span className="pointer-events-none absolute left-full ml-2 top-1/2 -translate-y-1/2 rounded-md border border-border bg-surface px-2 py-1 text-xs text-primary whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                Contact
+              </span>
+            </button>
+          </div>
+        </aside>
+      )}
     </div>
   );
 }
