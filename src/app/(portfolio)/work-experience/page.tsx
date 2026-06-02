@@ -1,5 +1,3 @@
-"use client";
-
 export default function WorkExperiencePage() {
   return (
     <div className="flex flex-col items-center justify-center h-full gap-3 text-center px-4">
