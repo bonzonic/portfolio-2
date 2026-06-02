@@ -108,20 +108,8 @@ export function ChatWidget() {
           {messages.map((msg, i) => (
             <div
               key={i}
-              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start gap-2.5"}`}
+              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
             >
-              {msg.role === "assistant" && (
-                <div className="w-6 h-6 rounded-full bg-surface border border-border shrink-0 mt-0.5 flex items-center justify-center">
-                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                    <path
-                      d="M5 1v8M1 5h8M2 2l6 6M8 2L2 8"
-                      stroke="#c9a96e"
-                      strokeWidth="1.2"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </div>
-              )}
               <div
                 className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
                   msg.role === "user"

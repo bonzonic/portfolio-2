@@ -53,7 +53,15 @@ function ProjectsIcon() {
       <rect x="2" y="2" width="5.5" height="5.5" rx="1" stroke="currentColor" strokeWidth="1.3" />
       <rect x="8.5" y="2" width="5.5" height="5.5" rx="1" stroke="currentColor" strokeWidth="1.3" />
       <rect x="2" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" strokeWidth="1.3" />
-      <rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" strokeWidth="1.3" />
+      <rect
+        x="8.5"
+        y="8.5"
+        width="5.5"
+        height="5.5"
+        rx="1"
+        stroke="currentColor"
+        strokeWidth="1.3"
+      />
     </svg>
   );
 }
@@ -115,7 +123,12 @@ function ContactIcon() {
 export function HamburgerIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M2 4h12M2 8h12M2 12h12"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -160,14 +173,6 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 py-3 shrink-0">
           <div className="flex items-center gap-2">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden className="text-accent">
-              <path
-                d="M9 2v14M2 9h14M4 4l10 10M14 4L4 14"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-              />
-            </svg>
             <span className="text-sm font-semibold text-primary tracking-tight">Nicholas Wong</span>
           </div>
           <div className="flex items-center gap-1">
@@ -201,7 +206,8 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
                 </div>
               );
             }
-            const isActive = entry.href === "/" ? pathname === "/" : pathname.startsWith(entry.href);
+            const isActive =
+              entry.href === "/" ? pathname === "/" : pathname.startsWith(entry.href);
             return (
               <Link
                 key={entry.href}
