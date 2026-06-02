@@ -127,10 +127,9 @@ function ComposeIcon() {
 
 const topNavItems: NavItem[] = [{ label: "New Chat", href: "/", icon: <NewChatIcon /> }];
 
-const mainNavItems: NavItem[] = [];
+const mainNavItems: NavItem[] = [{ label: "Projects", href: "/projects", icon: <ProjectsIcon /> }];
 
 const backgroundNavItems: NavItem[] = [
-  { label: "Projects", href: "/projects", icon: <ProjectsIcon /> },
   { label: "Work Experience", href: "/work-experience", icon: <WorkIcon /> },
   { label: "Achievements", href: "/achievements", icon: <AchievementsIcon /> },
   { label: "Tools", href: "/tools", icon: <ToolsIcon /> },
@@ -229,6 +228,7 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
               );
             })}
 
+            {mainNavItems.length > 0 && <SectionLabel label="Main" />}
             {mainNavItems.map((item) => (
               <NavLink key={item.href} item={item} pathname={pathname} />
             ))}
