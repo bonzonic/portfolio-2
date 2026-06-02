@@ -1,5 +1,8 @@
-import { ChatInterface } from "@/app/sections/chat-interface";
+import { redirect } from "next/navigation";
+import { randomUUID } from "crypto";
 
-export default function NewChatPage() {
-  return <ChatInterface />;
+export const dynamic = "force-dynamic";
+
+export default function HomePage() {
+  redirect(`/c/${randomUUID()}`);
 }

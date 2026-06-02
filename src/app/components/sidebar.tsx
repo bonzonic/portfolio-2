@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { curatedChats } from "@/app/data/chats";
+import { getChatIndex, type ChatMeta } from "@/app/utils/chat-store";
 
 export interface SidebarProps {
   isOpen: boolean;
@@ -98,7 +100,7 @@ function ContactIcon() {
   );
 }
 
-function HamburgerIcon() {
+export function HamburgerIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
       <path
@@ -111,18 +113,15 @@ function HamburgerIcon() {
   );
 }
 
-const topNavItems: NavItem[] = [{ label: "New Chat", href: "/", icon: <NewChatIcon /> }];
-
-const mainNavItems: NavItem[] = [{ label: "Projects", href: "/projects", icon: <ProjectsIcon /> }];
-
 const backgroundNavItems: NavItem[] = [
+  { label: "Projects", href: "/projects", icon: <ProjectsIcon /> },
   { label: "Work Experience", href: "/work-experience", icon: <WorkIcon /> },
   { label: "Achievements", href: "/achievements", icon: <AchievementsIcon /> },
   { label: "Tools", href: "/tools", icon: <ToolsIcon /> },
 ];
 
 function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
-  const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+  const isActive = pathname.startsWith(item.href);
   return (
     <Link
       href={item.href}
@@ -145,7 +144,7 @@ function SectionLabel({ label }: { label: string }) {
 }
 
 function CollapsedNavIcon({ item, pathname }: { item: NavItem; pathname: string }) {
-  const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+  const isActive = pathname.startsWith(item.href);
   return (
     <Link
       href={item.href}
@@ -165,38 +164,82 @@ function CollapsedNavIcon({ item, pathname }: { item: NavItem; pathname: string 
 
 export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [liveChats, setLiveChats] = useState<ChatMeta[]>([]);
+  const [displayExpanded, setDisplayExpanded] = useState(isOpen);
+
+  useEffect(() => {
+    const refresh = () => getChatIndex().then(setLiveChats);
+    refresh();
+    window.addEventListener("chat-updated", refresh);
+    return () => window.removeEventListener("chat-updated", refresh);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      setDisplayExpanded(true);
+    } else {
+      const id = setTimeout(() => setDisplayExpanded(false), 200);
+      return () => clearTimeout(id);
+    }
+  }, [isOpen]);
+
+  function handleNewChat() {
+    router.push(`/c/${crypto.randomUUID()}`);
+  }
 
   return (
     <div
-      className={`shrink-0 transition-[width] duration-200 ease-in-out ${
-        isOpen ? "w-65" : "w-[52px]"
-      }`}
+      className={`shrink-0 transition-[width] duration-200 ease-in-out ${isOpen ? "w-65" : "w-13"} ${displayExpanded ? "overflow-hidden" : ""}`}
     >
-      {isOpen ? (
+      {displayExpanded ? (
         <aside className="flex flex-col w-65 h-screen bg-sidebar border-r border-border">
           {/* Top bar */}
           <div className="flex items-center justify-between px-4 py-3 shrink-0">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-primary tracking-tight">Nicholas Wong</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <button
-                onClick={onToggle}
-                className="p-1.5 rounded-md text-muted hover:text-primary hover:bg-surface transition-colors"
-                aria-label="Close sidebar"
-              >
-                <HamburgerIcon />
-              </button>
-            </div>
+            <span className="text-sm font-semibold text-primary tracking-tight">Nicholas Wong</span>
+            <button
+              onClick={onToggle}
+              className="p-1.5 rounded-md text-muted hover:text-primary hover:bg-surface transition-colors cursor-pointer"
+              aria-label="Close sidebar"
+            >
+              <HamburgerIcon />
+            </button>
           </div>
 
           {/* Nav */}
           <nav className="flex-1 px-2 py-1 overflow-y-auto">
-            {topNavItems.map((item) => (
+            <button
+              onClick={handleNewChat}
+              className="flex items-center gap-2.5 w-full px-2.5 py-1.75 rounded-lg text-[13.5px] text-muted hover:bg-white/6 hover:text-primary transition-colors cursor-pointer"
+            >
+              <span className="text-muted">
+                <NewChatIcon />
+              </span>
+              New Chat
+            </button>
+
+            <SectionLabel label="Background" />
+            {backgroundNavItems.map((item) => (
               <NavLink key={item.href} item={item} pathname={pathname} />
             ))}
 
             <SectionLabel label="Recents" />
+            {liveChats.map((chat) => {
+              const isActive = pathname === `/c/${chat.id}`;
+              return (
+                <Link
+                  key={chat.id}
+                  href={`/c/${chat.id}`}
+                  className={`block px-2.5 py-1.75 rounded-lg text-[13.5px] truncate transition-colors ${
+                    isActive
+                      ? "bg-white/9 text-primary"
+                      : "text-muted hover:bg-white/6 hover:text-primary"
+                  }`}
+                >
+                  {chat.title}
+                </Link>
+              );
+            })}
             {curatedChats.map((chat) => {
               const isActive = pathname === `/chats/${chat.id}`;
               return (
@@ -213,15 +256,6 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
                 </Link>
               );
             })}
-
-            {mainNavItems.map((item) => (
-              <NavLink key={item.href} item={item} pathname={pathname} />
-            ))}
-
-            <SectionLabel label="Background" />
-            {backgroundNavItems.map((item) => (
-              <NavLink key={item.href} item={item} pathname={pathname} />
-            ))}
           </nav>
 
           {/* Bottom: Contact */}
@@ -236,12 +270,12 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
           </div>
         </aside>
       ) : (
-        <aside className="flex flex-col w-[52px] h-screen bg-sidebar border-r border-border">
+        <aside className="flex flex-col w-13 h-screen bg-sidebar border-r border-border">
           {/* Top: toggle */}
           <div className="flex items-center justify-center py-3 shrink-0">
             <button
               onClick={onToggle}
-              className="p-1.5 rounded-md text-muted hover:text-primary hover:bg-surface transition-colors"
+              className="p-1.5 rounded-md text-muted hover:text-primary hover:bg-surface transition-colors cursor-pointer"
               aria-label="Open sidebar"
             >
               <HamburgerIcon />
@@ -250,31 +284,33 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
 
           {/* Nav: icons only */}
           <nav className="flex-1 flex flex-col items-center px-2 py-1 gap-0.5 overflow-y-auto">
-            {topNavItems.map((item) => (
-              <CollapsedNavIcon key={item.href} item={item} pathname={pathname} />
-            ))}
-
-            {/* Dot stack: Recents indicator */}
             <button
-              onClick={onToggle}
-              className="group relative flex flex-col items-center justify-center w-9 gap-[3px] py-2 rounded-lg text-muted hover:bg-white/6 transition-colors"
-              aria-label="Expand sidebar to see recent chats"
+              onClick={handleNewChat}
+              className="group relative flex items-center justify-center w-9 h-9 rounded-lg text-muted hover:bg-white/6 hover:text-primary transition-colors cursor-pointer"
+              aria-label="New Chat"
             >
-              <span className="w-[5px] h-[5px] rounded-full bg-[#666]" />
-              <span className="w-[5px] h-[5px] rounded-full bg-[#555]" />
-              <span className="w-[5px] h-[5px] rounded-full bg-[#444]" />
+              <NewChatIcon />
               <span className="pointer-events-none absolute left-full ml-2 top-1/2 -translate-y-1/2 rounded-md border border-border bg-surface px-2 py-1 text-xs text-primary whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50">
-                Recents
+                New Chat
               </span>
             </button>
-
-            {mainNavItems.map((item) => (
-              <CollapsedNavIcon key={item.href} item={item} pathname={pathname} />
-            ))}
 
             {backgroundNavItems.map((item) => (
               <CollapsedNavIcon key={item.href} item={item} pathname={pathname} />
             ))}
+
+            <button
+              onClick={onToggle}
+              className="group relative flex flex-col items-center justify-center w-9 gap-0.75 py-2 rounded-lg text-muted hover:bg-white/6 transition-colors cursor-pointer"
+              aria-label="Expand sidebar to see recent chats"
+            >
+              <span className="w-1.25 h-1.25 rounded-full bg-[#666]" />
+              <span className="w-1.25 h-1.25 rounded-full bg-[#555]" />
+              <span className="w-1.25 h-1.25 rounded-full bg-[#444]" />
+              <span className="pointer-events-none absolute left-full ml-2 top-1/2 -translate-y-1/2 rounded-md border border-border bg-surface px-2 py-1 text-xs text-primary whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                Recents
+              </span>
+            </button>
           </nav>
 
           {/* Bottom: Contact */}

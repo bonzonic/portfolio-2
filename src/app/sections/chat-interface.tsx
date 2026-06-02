@@ -7,7 +7,11 @@ const suggestedPrompts = [
   "What are you working on now?",
 ];
 
-export function ChatInterface() {
+export interface ChatInterfaceProps {
+  chatId: string;
+}
+
+export function ChatInterface({ chatId }: ChatInterfaceProps) {
   return (
     <div className="flex flex-col min-h-full items-center justify-end p-10">
       {/* Greeting — scrolls away naturally once messages appear */}
@@ -34,7 +38,7 @@ export function ChatInterface() {
 
       {/* ChatWidget — owns message thread + input */}
       <div className="w-full max-w-160">
-        <ChatWidget />
+        <ChatWidget chatId={chatId} />
       </div>
     </div>
   );

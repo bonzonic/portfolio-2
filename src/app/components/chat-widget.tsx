@@ -1,11 +1,21 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { getHistory, saveHistory, clearHistory, type Message } from "@/app/utils/chat-store";
+import { getMessages, upsertChat, type Message } from "@/app/utils/chat-store";
 
 const MAX_HISTORY_SENT = 10;
 
-export function ChatWidget() {
+function deriveTitle(messages: Message[]): string {
+  const first = messages.find((m) => m.role === "user");
+  if (!first) return "New Chat";
+  return first.content.length > 45 ? first.content.slice(0, 42) + "..." : first.content;
+}
+
+export interface ChatWidgetProps {
+  chatId: string;
+}
+
+export function ChatWidget({ chatId }: ChatWidgetProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -14,8 +24,8 @@ export function ChatWidget() {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    getHistory().then(setMessages);
-  }, []);
+    getMessages(chatId).then(setMessages);
+  }, [chatId]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -66,7 +76,10 @@ export function ChatWidget() {
         { role: "assistant", content: fullContent, timestamp: Date.now() },
       ];
       setMessages(finalMessages);
-      await saveHistory(finalMessages);
+      await upsertChat(
+        { id: chatId, title: deriveTitle(finalMessages), updatedAt: Date.now() },
+        finalMessages,
+      );
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong";
       setError(msg);
@@ -92,12 +105,6 @@ export function ChatWidget() {
     const base = messages.slice(0, -2);
     setMessages(base);
     send(lastUserMessageRef.current, base);
-  }
-
-  async function handleClear() {
-    await clearHistory();
-    setMessages([]);
-    setError(null);
   }
 
   return (
@@ -162,33 +169,22 @@ export function ChatWidget() {
           disabled={isLoading}
           className="flex-1 bg-transparent text-sm text-primary placeholder:text-dim outline-none resize-none disabled:opacity-50"
         />
-        <div className="flex items-center gap-1.5 shrink-0">
-          {messages.length > 0 && (
-            <button
-              onClick={handleClear}
-              className="text-xs text-dim hover:text-muted transition-colors px-1"
-              title="Clear conversation"
-            >
-              Clear
-            </button>
-          )}
-          <button
-            onClick={handleSubmit}
-            disabled={isLoading || !input.trim()}
-            className="w-8 h-8 rounded-lg bg-accent/20 hover:bg-accent/30 text-accent flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-            aria-label="Send"
-          >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-              <path
-                d="M7 2v10M3 6l4-4 4 4"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-        </div>
+        <button
+          onClick={handleSubmit}
+          disabled={isLoading || !input.trim()}
+          className="w-8 h-8 rounded-lg bg-accent/20 hover:bg-accent/30 text-accent flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          aria-label="Send"
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path
+              d="M7 2v10M3 6l4-4 4 4"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   );

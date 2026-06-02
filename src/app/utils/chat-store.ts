@@ -4,43 +4,61 @@ export interface Message {
   timestamp: number;
 }
 
-const DB_NAME = "portfolio-chat";
+export interface ChatMeta {
+  id: string;
+  title: string;
+  updatedAt: number;
+}
+
+const DB_NAME = "portfolio-chat-v2";
 const DB_VERSION = 1;
-const STORE = "conversations";
-const KEY = "default";
+const MESSAGES_STORE = "messages";
+const INDEX_STORE = "chat-index";
+const INDEX_KEY = "__index__";
 
 function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, DB_VERSION);
-    req.onupgradeneeded = () => req.result.createObjectStore(STORE);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(MESSAGES_STORE)) db.createObjectStore(MESSAGES_STORE);
+      if (!db.objectStoreNames.contains(INDEX_STORE)) db.createObjectStore(INDEX_STORE);
+    };
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
   });
 }
 
-export async function getHistory(): Promise<Message[]> {
+export async function getMessages(chatId: string): Promise<Message[]> {
   const db = await openDB();
   return new Promise((resolve, reject) => {
-    const req = db.transaction(STORE, "readonly").objectStore(STORE).get(KEY);
+    const req = db.transaction(MESSAGES_STORE, "readonly").objectStore(MESSAGES_STORE).get(chatId);
     req.onsuccess = () => resolve(req.result ?? []);
     req.onerror = () => reject(req.error);
   });
 }
 
-export async function saveHistory(messages: Message[]): Promise<void> {
+export async function getChatIndex(): Promise<ChatMeta[]> {
   const db = await openDB();
   return new Promise((resolve, reject) => {
-    const req = db.transaction(STORE, "readwrite").objectStore(STORE).put(messages, KEY);
-    req.onsuccess = () => resolve();
+    const req = db.transaction(INDEX_STORE, "readonly").objectStore(INDEX_STORE).get(INDEX_KEY);
+    req.onsuccess = () => resolve(req.result ?? []);
     req.onerror = () => reject(req.error);
   });
 }
 
-export async function clearHistory(): Promise<void> {
+export async function upsertChat(meta: ChatMeta, messages: Message[]): Promise<void> {
+  const index = await getChatIndex();
+  const next = [meta, ...index.filter((c) => c.id !== meta.id)];
   const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const req = db.transaction(STORE, "readwrite").objectStore(STORE).delete(KEY);
-    req.onsuccess = () => resolve();
-    req.onerror = () => reject(req.error);
+  await new Promise<void>((resolve, reject) => {
+    const tx = db.transaction([MESSAGES_STORE, INDEX_STORE], "readwrite");
+    tx.objectStore(MESSAGES_STORE).put(messages, meta.id);
+    tx.objectStore(INDEX_STORE).put(next, INDEX_KEY);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
   });
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("chat-updated"));
+  }
 }
