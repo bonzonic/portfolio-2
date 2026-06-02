@@ -228,7 +228,6 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
               );
             })}
 
-            {mainNavItems.length > 0 && <SectionLabel label="Main" />}
             {mainNavItems.map((item) => (
               <NavLink key={item.href} item={item} pathname={pathname} />
             ))}
