@@ -16,8 +16,11 @@ const MESSAGES_STORE = "messages";
 const INDEX_STORE = "chat-index";
 const INDEX_KEY = "__index__";
 
+let dbPromise: Promise<IDBDatabase> | null = null;
+
 function openDB(): Promise<IDBDatabase> {
-  return new Promise((resolve, reject) => {
+  if (dbPromise) return dbPromise;
+  dbPromise = new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, DB_VERSION);
     req.onupgradeneeded = () => {
       const db = req.result;
@@ -25,8 +28,9 @@ function openDB(): Promise<IDBDatabase> {
       if (!db.objectStoreNames.contains(INDEX_STORE)) db.createObjectStore(INDEX_STORE);
     };
     req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
+    req.onerror = () => { dbPromise = null; reject(req.error); };
   });
+  return dbPromise;
 }
 
 export async function getMessages(chatId: string): Promise<Message[]> {
