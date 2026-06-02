@@ -26,9 +26,9 @@ export default function PortfolioLayout({ children }: { children: React.ReactNod
       <div className="flex flex-col h-full">
         <div className="flex items-center h-12 px-3 border-b border-border bg-main shrink-0">
           <button
-            onClick={() => setSidebarOpen(true)}
+            onClick={() => setSidebarOpen((prev) => !prev)}
             className="p-1.5 rounded-md text-muted hover:text-primary hover:bg-surface transition-colors cursor-pointer"
-            aria-label="Open sidebar"
+            aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
             aria-expanded={sidebarOpen}
           >
             <HamburgerIcon />

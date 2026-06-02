@@ -4,6 +4,11 @@ import { useEffect, useState } from "react";
 
 const MOBILE_BREAKPOINT = 768;
 
+/**
+ * Returns true when the viewport is narrower than the Tailwind `md` breakpoint (768px).
+ * SSR-safe: defaults to false on the server.
+ * Available for future components that need mobile-specific behaviour.
+ */
 export function useIsMobile(): boolean {
   const [isMobile, setIsMobile] = useState(false);
 

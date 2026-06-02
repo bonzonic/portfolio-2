@@ -138,7 +138,7 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
 function SectionLabel({ label }: { label: string }) {
   return (
     <div className="px-2 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-dim">
-      <span>{label}</span>
+      {label}
     </div>
   );
 }
