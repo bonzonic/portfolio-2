@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { curatedChats } from "@/app/data/chats";
 
 export interface SidebarProps {
   isOpen: boolean;
@@ -15,34 +16,11 @@ interface NavItem {
   icon: React.ReactNode;
 }
 
-interface NavSection {
-  section: string;
-}
-
-type NavEntry = NavItem | NavSection;
-
-function isSection(entry: NavEntry): entry is NavSection {
-  return "section" in entry;
-}
-
 function NewChatIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
       <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.3" />
       <path d="M8 5v6M5 8h6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function ChatsIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <path
-        d="M2 3.5A1.5 1.5 0 0 1 3.5 2h9A1.5 1.5 0 0 1 14 3.5v7a1.5 1.5 0 0 1-1.5 1.5H9l-3 2v-2H3.5A1.5 1.5 0 0 1 2 10.5v-7z"
-        stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinejoin="round"
-      />
     </svg>
   );
 }
@@ -147,15 +125,37 @@ function ComposeIcon() {
   );
 }
 
-const navEntries: NavEntry[] = [
-  { label: "New Chat", href: "/", icon: <NewChatIcon /> },
-  { label: "Chats", href: "/chats", icon: <ChatsIcon /> },
+const topNavItems: NavItem[] = [{ label: "New Chat", href: "/", icon: <NewChatIcon /> }];
+
+const backgroundNavItems: NavItem[] = [
   { label: "Projects", href: "/projects", icon: <ProjectsIcon /> },
-  { section: "Background" },
   { label: "Work Experience", href: "/work-experience", icon: <WorkIcon /> },
   { label: "Achievements", href: "/achievements", icon: <AchievementsIcon /> },
   { label: "Tools", href: "/tools", icon: <ToolsIcon /> },
 ];
+
+function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
+  const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+  return (
+    <Link
+      href={item.href}
+      className={`flex items-center gap-2.5 px-2.5 py-1.75 rounded-lg text-[13.5px] transition-colors ${
+        isActive ? "bg-white/9 text-primary" : "text-muted hover:bg-white/6 hover:text-primary"
+      }`}
+    >
+      <span className={isActive ? "text-primary" : "text-muted"}>{item.icon}</span>
+      {item.label}
+    </Link>
+  );
+}
+
+function SectionLabel({ label }: { label: string }) {
+  return (
+    <div className="px-2 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-dim">
+      {label}
+    </div>
+  );
+}
 
 export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
   const pathname = usePathname();
@@ -176,13 +176,6 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
             <span className="text-sm font-semibold text-primary tracking-tight">Nicholas Wong</span>
           </div>
           <div className="flex items-center gap-1">
-            <Link
-              href="/"
-              className="p-1.5 rounded-md text-muted hover:text-primary hover:bg-surface transition-colors"
-              aria-label="New chat"
-            >
-              <ComposeIcon />
-            </Link>
             <button
               onClick={onToggle}
               className="p-1.5 rounded-md text-muted hover:text-primary hover:bg-surface transition-colors"
@@ -195,31 +188,29 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
 
         {/* Nav */}
         <nav className="flex-1 px-2 py-1 overflow-y-auto">
-          {navEntries.map((entry) => {
-            if (isSection(entry)) {
-              return (
-                <div
-                  key={entry.section}
-                  className="px-2 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-dim"
-                >
-                  {entry.section}
-                </div>
-              );
-            }
-            const isActive =
-              entry.href === "/" ? pathname === "/" : pathname.startsWith(entry.href);
+          {topNavItems.map((item) => (
+            <NavLink key={item.href} item={item} pathname={pathname} />
+          ))}
+
+          <SectionLabel label="Background" />
+          {backgroundNavItems.map((item) => (
+            <NavLink key={item.href} item={item} pathname={pathname} />
+          ))}
+
+          <SectionLabel label="Recents" />
+          {curatedChats.map((chat) => {
+            const isActive = pathname === `/chats/${chat.id}`;
             return (
               <Link
-                key={entry.href}
-                href={entry.href}
-                className={`flex items-center gap-2.5 px-2.5 py-1.75 rounded-lg text-[13.5px] transition-colors ${
+                key={chat.id}
+                href={`/chats/${chat.id}`}
+                className={`block px-2.5 py-1.75 rounded-lg text-[13.5px] truncate transition-colors ${
                   isActive
                     ? "bg-white/9 text-primary"
                     : "text-muted hover:bg-white/6 hover:text-primary"
                 }`}
               >
-                <span className={isActive ? "text-primary" : "text-muted"}>{entry.icon}</span>
-                {entry.label}
+                {chat.title}
               </Link>
             );
           })}
