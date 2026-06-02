@@ -120,25 +120,37 @@ const backgroundNavItems: NavItem[] = [
   { label: "Tools", href: "/tools", icon: <ToolsIcon /> },
 ];
 
-function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
+function NavLink({ item, pathname, isOpen }: { item: NavItem; pathname: string; isOpen: boolean }) {
   const isActive = pathname.startsWith(item.href);
   return (
     <Link
       href={item.href}
-      className={`flex items-center gap-2.5 px-2.5 py-1.75 rounded-lg text-[13.5px] transition-colors ${
+      className={`flex items-center gap-2.5 px-2.5 h-9 rounded-lg text-[13.5px] transition-colors ${
         isActive ? "bg-white/9 text-primary" : "text-muted hover:bg-white/6 hover:text-primary"
       }`}
     >
       <span className={isActive ? "text-primary" : "text-muted"}>{item.icon}</span>
-      {item.label}
+      <span className={`transition-opacity duration-100 ${isOpen ? "opacity-100" : "opacity-0"}`}>
+        {item.label}
+      </span>
     </Link>
   );
 }
 
-function SectionLabel({ label }: { label: string }) {
+function SectionLabel({ label, isOpen }: { label: string; isOpen: boolean }) {
   return (
     <div className="px-2 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-dim">
-      {label}
+      <span className={`transition-opacity duration-100 ${isOpen ? "opacity-100" : "opacity-0"}`}>
+        {label}
+      </span>
+    </div>
+  );
+}
+
+function CollapsedSectionDivider() {
+  return (
+    <div className="h-[35px] w-full flex items-center justify-center">
+      <div className="w-5 border-t border-border" />
     </div>
   );
 }
@@ -196,7 +208,7 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
         <aside className="flex flex-col w-65 h-screen bg-sidebar border-r border-border">
           {/* Top bar */}
           <div className="flex items-center justify-between px-4 py-3 shrink-0">
-            <span className="text-sm font-semibold text-primary tracking-tight">Nicholas Wong</span>
+            <span className={`text-sm font-semibold text-primary tracking-tight transition-opacity duration-100 ${isOpen ? "opacity-100" : "opacity-0"}`}>Nicholas Wong</span>
             <button
               onClick={onToggle}
               className="p-1.5 rounded-md text-muted hover:text-primary hover:bg-surface transition-colors cursor-pointer"
@@ -210,31 +222,31 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
           <nav className="flex-1 px-2 py-1 overflow-y-auto">
             <button
               onClick={handleNewChat}
-              className="flex items-center gap-2.5 w-full px-2.5 py-1.75 rounded-lg text-[13.5px] text-muted hover:bg-white/6 hover:text-primary transition-colors cursor-pointer"
+              className="flex items-center gap-2.5 w-full px-2.5 h-9 rounded-lg text-[13.5px] text-muted hover:bg-white/6 hover:text-primary transition-colors cursor-pointer"
             >
               <span className="text-muted">
                 <NewChatIcon />
               </span>
-              New Chat
+              <span className={`transition-opacity duration-100 ${isOpen ? "opacity-100" : "opacity-0"}`}>New Chat</span>
             </button>
 
-            <SectionLabel label="Background" />
+            <SectionLabel label="Background" isOpen={isOpen} />
             {backgroundNavItems.map((item) => (
-              <NavLink key={item.href} item={item} pathname={pathname} />
+              <NavLink key={item.href} item={item} pathname={pathname} isOpen={isOpen} />
             ))}
 
-            <SectionLabel label="Recents" />
+            <SectionLabel label="Recents" isOpen={isOpen} />
             {liveChats.map((chat) => {
               const isActive = pathname === `/c/${chat.id}`;
               return (
                 <Link
                   key={chat.id}
                   href={`/c/${chat.id}`}
-                  className={`block px-2.5 py-1.75 rounded-lg text-[13.5px] truncate transition-colors ${
+                  className={`block px-2.5 py-1.75 rounded-lg text-[13.5px] truncate transition duration-100 ${
                     isActive
                       ? "bg-white/9 text-primary"
                       : "text-muted hover:bg-white/6 hover:text-primary"
-                  }`}
+                  } ${isOpen ? "opacity-100" : "opacity-0"}`}
                 >
                   {chat.title}
                 </Link>
@@ -246,11 +258,11 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
                 <Link
                   key={chat.id}
                   href={`/chats/${chat.id}`}
-                  className={`block px-2.5 py-1.75 rounded-lg text-[13.5px] truncate transition-colors ${
+                  className={`block px-2.5 py-1.75 rounded-lg text-[13.5px] truncate transition duration-100 ${
                     isActive
                       ? "bg-white/9 text-primary"
                       : "text-muted hover:bg-white/6 hover:text-primary"
-                  }`}
+                  } ${isOpen ? "opacity-100" : "opacity-0"}`}
                 >
                   {chat.title}
                 </Link>
@@ -262,10 +274,10 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
           <div className="px-2 py-2 border-t border-border shrink-0">
             <button
               onClick={onContactClick}
-              className="flex items-center gap-2.5 w-full px-2.5 py-1.75 rounded-lg text-[13.5px] text-muted hover:bg-white/6 hover:text-primary transition-colors cursor-pointer"
+              className="flex items-center gap-2.5 w-full px-2.5 h-9 rounded-lg text-[13.5px] text-muted hover:bg-white/6 hover:text-primary transition-colors cursor-pointer"
             >
               <ContactIcon />
-              Contact
+              <span className={`transition-opacity duration-100 ${isOpen ? "opacity-100" : "opacity-0"}`}>Contact</span>
             </button>
           </div>
         </aside>
@@ -275,15 +287,18 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
           <div className="flex items-center justify-center py-3 shrink-0">
             <button
               onClick={onToggle}
-              className="p-1.5 rounded-md text-muted hover:text-primary hover:bg-surface transition-colors cursor-pointer"
+              className="group relative p-1.5 rounded-md text-muted hover:text-primary hover:bg-surface transition-colors cursor-pointer"
               aria-label="Open sidebar"
             >
               <HamburgerIcon />
+              <span className="pointer-events-none absolute left-full ml-2 top-1/2 -translate-y-1/2 rounded-md border border-border bg-surface px-2 py-1 text-xs text-primary whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                Open sidebar
+              </span>
             </button>
           </div>
 
           {/* Nav: icons only */}
-          <nav className="flex-1 flex flex-col items-center px-2 py-1 gap-0.5 overflow-y-auto">
+          <nav className="flex-1 flex flex-col items-center px-2 py-1">
             <button
               onClick={handleNewChat}
               className="group relative flex items-center justify-center w-9 h-9 rounded-lg text-muted hover:bg-white/6 hover:text-primary transition-colors cursor-pointer"
@@ -295,9 +310,13 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
               </span>
             </button>
 
+            <CollapsedSectionDivider />
+
             {backgroundNavItems.map((item) => (
               <CollapsedNavIcon key={item.href} item={item} pathname={pathname} />
             ))}
+
+            <CollapsedSectionDivider />
 
             <button
               onClick={onToggle}
