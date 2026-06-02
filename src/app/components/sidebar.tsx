@@ -202,7 +202,7 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
 
   return (
     <div
-      className={`shrink-0 transition-[width] duration-200 ease-in-out ${isOpen ? "w-65" : "w-13"} ${displayExpanded ? "overflow-hidden" : ""}`}
+      className={`fixed inset-y-0 left-0 z-50 md:static md:z-auto md:inset-auto md:shrink-0 md:translate-x-0 transition-transform duration-200 ease-in-out md:transition-[width] ${isOpen ? "translate-x-0 md:w-65" : "-translate-x-full md:w-13"} ${displayExpanded ? "md:overflow-hidden" : ""}`}
     >
       {displayExpanded ? (
         <aside className="flex flex-col w-65 h-screen bg-sidebar border-r border-border">
