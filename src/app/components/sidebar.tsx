@@ -168,7 +168,7 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
                 strokeLinecap="round"
               />
             </svg>
-            <span className="text-sm font-semibold text-primary tracking-tight">Nicholas</span>
+            <span className="text-sm font-semibold text-primary tracking-tight">Nicholas Wong</span>
           </div>
           <div className="flex items-center gap-1">
             <Link
