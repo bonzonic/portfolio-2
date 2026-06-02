@@ -111,20 +111,6 @@ function HamburgerIcon() {
   );
 }
 
-function ComposeIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <path
-        d="M2 14l3.5-1.5 8-8a1.5 1.5 0 0 0-2-2l-8 8L2 14z"
-        stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 const topNavItems: NavItem[] = [{ label: "New Chat", href: "/", icon: <NewChatIcon /> }];
 
 const mainNavItems: NavItem[] = [{ label: "Projects", href: "/projects", icon: <ProjectsIcon /> }];
@@ -182,7 +168,7 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
 
   return (
     <div
-      className={`shrink-0 overflow-hidden transition-[width] duration-200 ease-in-out ${
+      className={`shrink-0 transition-[width] duration-200 ease-in-out ${
         isOpen ? "w-65" : "w-[52px]"
       }`}
     >
@@ -242,7 +228,7 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
           <div className="px-2 py-2 border-t border-border shrink-0">
             <button
               onClick={onContactClick}
-              className="flex items-center gap-2.5 w-full px-2.5 py-1.75 rounded-lg text-[13.5px] text-muted hover:bg-white/6 hover:text-primary transition-colors"
+              className="flex items-center gap-2.5 w-full px-2.5 py-1.75 rounded-lg text-[13.5px] text-muted hover:bg-white/6 hover:text-primary transition-colors cursor-pointer"
             >
               <ContactIcon />
               Contact
@@ -295,7 +281,7 @@ export function Sidebar({ isOpen, onToggle, onContactClick }: SidebarProps) {
           <div className="flex justify-center py-2 border-t border-border shrink-0">
             <button
               onClick={onContactClick}
-              className="group relative flex items-center justify-center w-9 h-9 rounded-lg text-muted hover:bg-white/6 hover:text-primary transition-colors"
+              className="group relative flex items-center justify-center w-9 h-9 rounded-lg text-muted hover:bg-white/6 hover:text-primary transition-colors cursor-pointer"
               aria-label="Contact"
             >
               <ContactIcon />
