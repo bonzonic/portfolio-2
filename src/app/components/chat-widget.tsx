@@ -11,6 +11,13 @@ function deriveTitle(messages: Message[]): string {
   return first.content.length > 45 ? first.content.slice(0, 42) + "..." : first.content;
 }
 
+const suggestedPrompts = [
+  "Tell me about your experience",
+  "What projects have you shipped?",
+  "What are your core skills?",
+  "What are you working on now?",
+];
+
 export interface ChatWidgetProps {
   chatId: string;
 }
@@ -151,6 +158,30 @@ export function ChatWidget({ chatId }: ChatWidgetProps) {
           >
             Retry
           </button>
+        </div>
+      )}
+
+      {/* Greeting + prompts — only shown before any message is sent */}
+      {messages.length === 0 && (
+        <div className="mb-6 text-center">
+          <h1 className="text-2xl font-semibold text-primary tracking-tight mb-2">
+            What can I help with?
+          </h1>
+          <p className="text-sm text-dim">Ask me anything about Nicholas&apos;s work and experience</p>
+        </div>
+      )}
+      {messages.length === 0 && (
+        <div className="flex flex-wrap justify-center gap-2">
+          {suggestedPrompts.map((prompt) => (
+            <button
+              key={prompt}
+              onClick={() => send(prompt, [])}
+              disabled={isLoading}
+              className="px-3.5 py-1.5 rounded-full text-xs text-muted border border-border bg-surface hover:border-white/20 hover:text-primary transition-colors cursor-pointer disabled:opacity-50"
+            >
+              {prompt}
+            </button>
+          ))}
         </div>
       )}
 
