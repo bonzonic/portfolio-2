@@ -13,9 +13,9 @@ export interface ChatInterfaceProps {
 
 export function ChatInterface({ chatId }: ChatInterfaceProps) {
   return (
-    <div className="flex flex-col min-h-full items-center justify-end p-10">
+    <div className="flex flex-col min-h-full items-center justify-end px-4 py-6 md:px-10 md:py-10">
       {/* Greeting — scrolls away naturally once messages appear */}
-      <div className="w-full max-w-160 mb-6 text-center">
+      <div className="w-full max-w-2xl mb-6 text-center">
         <h1 className="text-2xl font-semibold text-primary tracking-tight mb-2">
           What can I help with?
         </h1>
@@ -25,7 +25,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
       </div>
 
       {/* Suggested prompts */}
-      <div className="flex flex-wrap justify-center gap-2 w-full max-w-160 mb-5">
+      <div className="flex flex-wrap justify-center gap-2 w-full max-w-2xl mb-5">
         {suggestedPrompts.map((prompt) => (
           <span
             key={prompt}
@@ -37,7 +37,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
       </div>
 
       {/* ChatWidget — owns message thread + input */}
-      <div className="w-full max-w-160">
+      <div className="w-full max-w-2xl">
         <ChatWidget chatId={chatId} />
       </div>
     </div>
