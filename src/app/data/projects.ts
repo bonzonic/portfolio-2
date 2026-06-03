@@ -11,8 +11,8 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    id: "portfolio",
-    name: "Portfolio",
+    id: "portfolio-v2",
+    name: "Portfolio v2",
     description:
       "Personal portfolio website inspired by Claude.ai's UI. Features a dark warm theme, AI-powered chat interface backed by OpenRouter, curated conversation showcases, and smooth sidebar navigation.",
     longDescription:
@@ -25,7 +25,22 @@ export const projects: Project[] = [
       "Deployed on Vercel with automatic CI/CD on every push to main",
     ],
     techStack: ["Next.js 15", "TypeScript", "Tailwind CSS v4", "OpenRouter API"],
-    url: "https://wongyizhen.com",
+    url: "https://portfolio-2-beige-xi.vercel.app",
+  },
+  {
+    id: "portfolio-v1",
+    name: "Portfolio v1",
+    description:
+      "First iteration of my personal portfolio. A clean, card-based layout showcasing projects, skills, and experience — the foundation that led to the current redesign.",
+    longDescription:
+      "The first version of my personal portfolio, built before the current redesign. It established the core content structure — projects, work experience, skills, and contact — in a more traditional card-based layout. Building v1 clarified what I wanted to improve: more personality, faster navigation, and an interactive way for visitors to learn about me beyond a static page. Those lessons directly shaped the chat-first approach in v2.",
+    highlights: [
+      "Card-based layout presenting projects, skills, and work experience",
+      "Served as the baseline that informed the v2 redesign decisions",
+      "Deployed on Vercel",
+    ],
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
+    url: "https://portfolio-steel-eta-78.vercel.app",
   },
   {
     id: "kl-mini-hack",
