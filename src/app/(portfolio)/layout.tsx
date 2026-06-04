@@ -9,7 +9,7 @@ export default function PortfolioLayout({ children }: { children: React.ReactNod
   const [contactOpen, setContactOpen] = useState(false);
 
   return (
-    <div className="h-screen overflow-hidden bg-main">
+    <div className="h-dvh overflow-hidden bg-main">
       {sidebarOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/50"

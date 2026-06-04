@@ -12,6 +12,12 @@
 }
 
 @layer base {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+
   body {
     background-color: var(--color-main);
     color: var(--color-primary);
