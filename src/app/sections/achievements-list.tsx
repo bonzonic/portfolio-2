@@ -19,6 +19,7 @@ function AchievementCard({ item }: { item: Achievement }) {
             src={item.image}
             alt={`${item.title} thumbnail`}
             fill
+            sizes="112px"
             className="object-cover"
           />
         ) : (

@@ -26,7 +26,7 @@ export function ProjectsGrid() {
                   alt={`${project.name} preview`}
                   width={1440}
                   height={900}
-                  className="w-full h-full object-cover object-top"
+                  className="w-full h-full object-cover object-top transition-transform duration-300 hover:scale-110"
                 />
               </div>
             )}

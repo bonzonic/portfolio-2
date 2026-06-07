@@ -66,5 +66,6 @@ export const achievements: Achievement[] = [
     description:
       "Led a team of 12 committee members, mentoring them on event management and sponsorship negotiation. Collaborated with 10+ board game cafes to provide member discounts. Grew club social media from near-zero: +3,900% accounts reached, +264% accounts engaged, +34.4% total followers over 2 months.",
     category: "leadership",
+    image: "/achievements/mbgc.JPG",
   },
 ];
