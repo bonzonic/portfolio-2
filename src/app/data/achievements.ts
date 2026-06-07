@@ -26,7 +26,12 @@ export const achievements: Achievement[] = [
       "Collaborated with university FYP teammates to publish a paper to the ACM investigating the impact of preprocessing techniques — including brightness and blurriness adjustments — on deep learning model performance when dealing with low-quality visual data in industrial settings. The paper focuses on grading Edible Bird's Nest quality. Key outcomes: successful AI prototype for automated grading, potential automation for quality control, and utilization of generative AI for training data augmentation.",
     category: "achievement",
     image: "/achievements/paper.png",
-    links: [{ label: "View on ACM Digital Library", url: "https://dl.acm.org/doi/10.1145/3611380.3629545" }],
+    links: [
+      {
+        label: "View on ACM Digital Library",
+        url: "https://dl.acm.org/doi/10.1145/3611380.3629545",
+      },
+    ],
   },
   {
     id: "best-fyp-award",
