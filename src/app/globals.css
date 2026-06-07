@@ -48,3 +48,20 @@
     background-color: var(--color-muted);
   }
 }
+
+@layer components {
+  .shimmer-grid {
+    background-image:
+      radial-gradient(
+        circle 220px at var(--shimmer-x, 50%) var(--shimmer-y, 50%),
+        rgba(201, 169, 110, 0.16),
+        transparent 70%
+      ),
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size:
+      100% 100%,
+      32px 32px,
+      32px 32px;
+  }
+}
