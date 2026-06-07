@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import type { Project } from "@/app/data/projects";
 
@@ -61,6 +62,28 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
           ))}
         </div>
       </div>
+
+      {/* Screenshots */}
+      {project.images && project.images.length > 0 && (
+        <div className="flex flex-col gap-6 mb-6">
+          {project.images.map((image, i) => (
+            <div key={i} className="flex flex-col gap-3">
+              <div className="relative w-full rounded-xl overflow-hidden border border-border">
+                <Image
+                  src={image.src}
+                  alt={`${project.name} screenshot ${i + 1}`}
+                  width={1440}
+                  height={900}
+                  className="w-full h-auto"
+                />
+              </div>
+              {image.caption && (
+                <p className="text-[13.5px] text-muted leading-relaxed">{image.caption}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Description */}
       <p className="text-[14px] text-muted leading-relaxed mb-6">{project.longDescription}</p>

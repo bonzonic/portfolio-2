@@ -1,3 +1,8 @@
+export interface ProjectImage {
+  src: string;
+  caption?: string;
+}
+
 export interface Project {
   id: string;
   name: string;
@@ -5,6 +10,7 @@ export interface Project {
   longDescription: string;
   highlights: string[];
   techStack: string[];
+  images?: ProjectImage[];
   url?: string;
   github?: string;
 }
@@ -25,6 +31,10 @@ export const projects: Project[] = [
       "Deployed on Vercel with automatic CI/CD on every push to main",
     ],
     techStack: ["Next.js 15", "TypeScript", "Tailwind CSS v4", "OpenRouter API"],
+    images: [
+      { src: "/projects/portfolio-v2-chat.png" },
+      { src: "/projects/portfolio-v2-sidebar.png" },
+    ],
     url: "https://portfolio-2-beige-xi.vercel.app",
   },
   {
@@ -33,46 +43,22 @@ export const projects: Project[] = [
     description:
       "First iteration of my personal portfolio. A clean, card-based layout showcasing projects, skills, and experience — the foundation that led to the current redesign.",
     longDescription:
-      "The first version of my personal portfolio, built before the current redesign. It established the core content structure — projects, work experience, skills, and contact — in a more traditional card-based layout. Building v1 clarified what I wanted to improve: more personality, faster navigation, and an interactive way for visitors to learn about me beyond a static page. Those lessons directly shaped the chat-first approach in v2.",
+      "The first version of my personal portfolio, built before the current redesign. It established the core content structure — projects, work experience, skills, and contact — in a traditional card-based layout, and the lessons learned here directly shaped the chat-first redesign in v2.",
     highlights: [
       "Card-based layout presenting projects, skills, and work experience",
       "Served as the baseline that informed the v2 redesign decisions",
       "Deployed on Vercel",
     ],
-    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Figma"],
+    images: [
+      {
+        src: "/projects/portfolio-v1-figma.png",
+        caption:
+          "Before writing any code, I designed the whole site in Figma — from rough scribbles to a polished UI. Along the way I learnt to build components with text and boolean properties, making them scalable so the design stayed easy to change. From there, I ported the design over to code, starting with the smallest components and building them up into full pages. Designing in Figma first made it easy to nail down exactly what I was looking for, since visual changes are far quicker to make there than in code — so once I moved to development, I could focus purely on the code itself.",
+      },
+      { src: "/projects/portfolio-v1-home.png" },
+      { src: "/projects/portfolio-v1-projects.png" },
+    ],
     url: "https://portfolio-steel-eta-78.vercel.app",
-  },
-  {
-    id: "kl-mini-hack",
-    name: "KL Mini Hack — Anonymous Voting System",
-    description:
-      "2nd place at a 1-week blockchain hackathon organized by ETHKL. Built an anonymous and secure voting system using zero-knowledge proof, incentivizing users with a custom Cabbage Coin ERC-20 token.",
-    longDescription:
-      "A 1-week hackathon hosted by ETHKL where our team placed 2nd overall. The challenge was to build a trustless voting system that guaranteed both anonymity and verifiability — two properties that typically conflict. We solved this using zero-knowledge proofs so voters could prove eligibility without revealing identity.",
-    highlights: [
-      "Zero-knowledge proof implementation to ensure anonymous yet verifiable votes",
-      "Custom ERC-20 token (Cabbage Coin) distributed as incentive for participation",
-      "Smart contract written in Solidity and deployed via Truffle",
-      "Dashboard UI built in React with an Express backend for off-chain coordination",
-      "Designed the full contract architecture and led frontend development",
-    ],
-    techStack: ["React", "Express", "Solidity", "Truffle", "Zero-Knowledge Proofs"],
-  },
-  {
-    id: "fyp-birds-nest",
-    name: "Edible Bird's Nest AI Grading System",
-    description:
-      "Final year project resulting in a published ACM paper. Developed an AI prototype for grading edible bird's nest, investigating the impact of preprocessing techniques on deep learning model performance.",
-    longDescription:
-      "Final year capstone project that resulted in a peer-reviewed ACM publication: \"Preprocessing Variations for Classification in Smart Manufacturing\". The goal was to automate the grading of edible bird's nest — a high-value product whose quality is currently assessed by hand by trained experts — using computer vision and deep learning.",
-    highlights: [
-      "Published in ACM Digital Library as part of the Smart Manufacturing research track",
-      "Investigated how preprocessing variables (brightness normalisation, blur filtering) affect CNN classification accuracy",
-      "Used generative AI (GANs) to synthesise training images and address the limited dataset problem",
-      "Achieved classification accuracy competitive with manual expert grading",
-      "Entire ML pipeline built in Python using standard deep learning frameworks",
-    ],
-    techStack: ["Python", "Deep Learning", "Generative AI", "Computer Vision"],
-    url: "https://dl.acm.org",
   },
 ];
