@@ -12,14 +12,14 @@ export function ProjectsGrid() {
         e.currentTarget.style.setProperty("--shimmer-x", `${e.clientX - rect.left}px`);
         e.currentTarget.style.setProperty("--shimmer-y", `${e.clientY - rect.top}px`);
       }}
-      className="group/shimmer relative px-8 py-8 max-w-225 mx-auto"
+      className="group/shimmer relative min-h-full"
     >
       <div
         aria-hidden="true"
         className="shimmer-grid pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover/shimmer:opacity-100"
       />
 
-      <div className="relative">
+      <div className="relative px-8 py-8 max-w-225 mx-auto">
         <div className="mb-6">
           <h1 className="text-xl font-semibold text-primary tracking-tight">Projects</h1>
           <p className="text-sm text-muted mt-1">Things I&apos;ve built and shipped</p>
