@@ -46,7 +46,12 @@ export function ContactModal({ onClose }: ContactModalProps) {
           aria-label="Close"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <path
+              d="M3 3l10 10M13 3L3 13"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
           </svg>
         </button>
 
@@ -65,8 +70,21 @@ export function ContactModal({ onClose }: ContactModalProps) {
             className="flex items-center gap-3 text-sm text-muted hover:text-primary transition-colors"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <rect x="1.5" y="3.5" width="13" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.3" />
-              <path d="M1.5 5.5l6.5 4 6.5-4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+              <rect
+                x="1.5"
+                y="3.5"
+                width="13"
+                height="9"
+                rx="1.5"
+                stroke="currentColor"
+                strokeWidth="1.3"
+              />
+              <path
+                d="M1.5 5.5l6.5 4 6.5-4"
+                stroke="currentColor"
+                strokeWidth="1.3"
+                strokeLinecap="round"
+              />
             </svg>
             {contact.email}
           </a>
@@ -92,7 +110,15 @@ export function ContactModal({ onClose }: ContactModalProps) {
             className="flex items-center gap-3 text-sm text-muted hover:text-primary transition-colors"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <rect x="1.5" y="1.5" width="13" height="13" rx="2" stroke="currentColor" strokeWidth="1.3" />
+              <rect
+                x="1.5"
+                y="1.5"
+                width="13"
+                height="13"
+                rx="2"
+                stroke="currentColor"
+                strokeWidth="1.3"
+              />
               <path
                 d="M4 6.5v5M4 4.5v.5M7 11.5V9a1.5 1.5 0 0 1 3 0v2.5M7 6.5v5"
                 stroke="currentColor"

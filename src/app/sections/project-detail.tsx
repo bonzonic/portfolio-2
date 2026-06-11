@@ -96,7 +96,10 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
           </h2>
           <ul className="flex flex-col gap-2">
             {project.highlights.map((point, i) => (
-              <li key={i} className="flex items-start gap-2.5 text-[13.5px] text-muted leading-relaxed">
+              <li
+                key={i}
+                className="flex items-start gap-2.5 text-[13.5px] text-muted leading-relaxed"
+              >
                 <span className="mt-[6px] w-1 h-1 rounded-full bg-dim shrink-0" />
                 {point}
               </li>

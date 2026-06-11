@@ -5,15 +5,10 @@ import type { Message } from "@/app/utils/chat-store";
 
 export async function POST(request: NextRequest) {
   const ip =
-    request.headers.get("x-forwarded-for") ??
-    request.headers.get("x-real-ip") ??
-    "unknown";
+    request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? "unknown";
 
   if (!checkRateLimit(ip)) {
-    return Response.json(
-      { error: "Too many requests. Please wait a moment." },
-      { status: 429 },
-    );
+    return Response.json({ error: "Too many requests. Please wait a moment." }, { status: 429 });
   }
 
   let body: { message?: unknown; history?: unknown };
@@ -60,8 +55,12 @@ export async function POST(request: NextRequest) {
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       return Response.json(
-        { error: (data as { error?: { message?: string } }).error?.message ?? "OpenRouter request failed" },
-        { status: res.status },
+        {
+          error:
+            (data as { error?: { message?: string } }).error?.message ??
+            "OpenRouter request failed",
+        },
+        { status: res.status }
       );
     }
 

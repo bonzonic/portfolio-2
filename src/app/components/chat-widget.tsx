@@ -78,7 +78,7 @@ export function ChatWidget({ chatId }: ChatWidgetProps) {
       setMessages(finalMessages);
       await upsertChat(
         { id: chatId, title: deriveTitle(finalMessages), updatedAt: Date.now() },
-        finalMessages,
+        finalMessages
       );
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong";

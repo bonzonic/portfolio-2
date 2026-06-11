@@ -28,7 +28,10 @@ function openDB(): Promise<IDBDatabase> {
       if (!db.objectStoreNames.contains(INDEX_STORE)) db.createObjectStore(INDEX_STORE);
     };
     req.onsuccess = () => resolve(req.result);
-    req.onerror = () => { dbPromise = null; reject(req.error); };
+    req.onerror = () => {
+      dbPromise = null;
+      reject(req.error);
+    };
   });
   return dbPromise;
 }

@@ -1,18 +1,35 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
-import {
-  achievements,
-  type Achievement,
-  type AchievementCategory,
-} from "@/app/data/achievements";
+import { achievements, type Achievement, type AchievementCategory } from "@/app/data/achievements";
+import { AchievementModal } from "@/app/components/achievement-modal";
 
 const SECTIONS: { category: AchievementCategory; heading: string }[] = [
   { category: "achievement", heading: "Achievements" },
   { category: "leadership", heading: "Leadership" },
 ];
 
-function AchievementCard({ item }: { item: Achievement }) {
+interface AchievementCardProps {
+  item: Achievement;
+  onOpen: (item: Achievement) => void;
+}
+
+function AchievementCard({ item, onOpen }: AchievementCardProps) {
   return (
-    <div className="bg-surface border border-border rounded-xl p-4 flex gap-4 hover:border-white/20 transition-colors">
+    <div
+      onClick={() => onOpen(item)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onOpen(item);
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`View details for ${item.title}`}
+      className="bg-surface border border-border rounded-xl p-4 flex gap-4 hover:border-white/20 transition-colors cursor-pointer"
+    >
       <div className="relative w-24 h-24 sm:w-28 sm:h-28 shrink-0 overflow-hidden rounded-lg border border-border">
         {item.image ? (
           <Image
@@ -48,6 +65,7 @@ function AchievementCard({ item }: { item: Achievement }) {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
                 className="text-[12px] text-accent hover:text-accent/80 transition-colors flex items-center gap-1.5 pt-1"
               >
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -70,6 +88,8 @@ function AchievementCard({ item }: { item: Achievement }) {
 }
 
 export function AchievementsList() {
+  const [active, setActive] = useState<Achievement | null>(null);
+
   return (
     <div className="px-8 py-8 max-w-180 mx-auto">
       <div className="mb-6">
@@ -89,13 +109,15 @@ export function AchievementsList() {
               </h2>
               <div className="flex flex-col gap-4">
                 {items.map((item) => (
-                  <AchievementCard key={item.id} item={item} />
+                  <AchievementCard key={item.id} item={item} onOpen={setActive} />
                 ))}
               </div>
             </section>
           );
         })}
       </div>
+
+      {active && <AchievementModal achievement={active} onClose={() => setActive(null)} />}
     </div>
   );
 }
