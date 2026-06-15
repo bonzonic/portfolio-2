@@ -12,7 +12,7 @@ export interface Education {
   details?: string;
 }
 
-export const bio = `Nicholas Wong (Wong Yi Zhen) is a full-stack developer based in Malaysia/Singapore with 3 years of experience building and shipping products in fast-paced environments. He specializes in React, TypeScript, Vue, and WebGL, with a focus on low-latency, data-intensive and real-time systems. He leverages AI-assisted workflows to rapidly deliver scalable, production-ready applications, and holds cloud certifications from both AWS (Solutions Architect Associate) and Google Cloud (Associate Cloud Engineer).`;
+export const bio = `Wong Nicholas is a full-stack developer based in Malaysia with 3 years of experience building and shipping products in fast-paced environments. He specializes in React, TypeScript, Vue, and WebGL, with a focus on low-latency, data-intensive and real-time systems. He leverages AI-assisted workflows to rapidly deliver scalable, production-ready applications, and holds cloud certifications from both AWS (Solutions Architect Associate) and Google Cloud (Associate Cloud Engineer).`;
 
 export const experience: WorkExperience[] = [
   {

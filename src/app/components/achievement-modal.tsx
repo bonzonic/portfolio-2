@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import type { Achievement } from "@/app/data/achievements";
 
@@ -12,6 +12,8 @@ export interface AchievementModalProps {
 export function AchievementModal({ achievement, onClose }: AchievementModalProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<Element | null>(null);
+  const [activeImage, setActiveImage] = useState(0);
+  const galleryImages = achievement.images ?? (achievement.image ? [achievement.image] : []);
 
   useEffect(() => {
     previousFocusRef.current = document.activeElement;
@@ -39,12 +41,12 @@ export function AchievementModal({ achievement, onClose }: AchievementModalProps
       />
 
       {/* Panel */}
-      <div className="relative z-10 w-full max-w-lg max-h-[85vh] mx-4 overflow-y-auto bg-surface border border-border rounded-2xl p-6 shadow-2xl">
+      <div className="relative z-10 w-full max-w-lg lg:max-w-xl xl:max-w-2xl max-h-[85vh] mx-4 overflow-y-auto bg-surface border border-border rounded-2xl p-6 shadow-2xl">
         {/* Close button */}
         <button
           ref={closeButtonRef}
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-md text-muted hover:text-primary hover:bg-white/6 transition-colors"
+          className="absolute top-4 right-4 z-20 p-1.5 rounded-md bg-surface/80 backdrop-blur-sm text-muted hover:text-primary transition-colors cursor-pointer"
           aria-label="Close"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -58,13 +60,13 @@ export function AchievementModal({ achievement, onClose }: AchievementModalProps
         </button>
 
         {/* Image */}
-        <div className="relative w-full aspect-video overflow-hidden rounded-xl border border-border mb-5">
-          {achievement.image ? (
+        <div className="relative w-full aspect-video overflow-hidden rounded-xl border border-border mb-2">
+          {galleryImages.length > 0 ? (
             <Image
-              src={achievement.image}
+              src={galleryImages[activeImage]}
               alt={`${achievement.title} image`}
               fill
-              sizes="(max-width: 640px) 100vw, 512px"
+              sizes="(max-width: 640px) 100vw, (max-width: 1280px) 576px, 672px"
               className="object-cover"
             />
           ) : (
@@ -73,6 +75,26 @@ export function AchievementModal({ achievement, onClose }: AchievementModalProps
             </div>
           )}
         </div>
+
+        {/* Gallery thumbnails */}
+        {galleryImages.length > 1 && (
+          <div className="flex gap-2 mb-5">
+            {galleryImages.map((src, i) => (
+              <button
+                key={src}
+                onClick={() => setActiveImage(i)}
+                aria-label={`View image ${i + 1}`}
+                aria-current={i === activeImage}
+                className={`relative w-14 h-14 shrink-0 overflow-hidden rounded-lg border transition-colors ${
+                  i === activeImage ? "border-accent" : "border-border hover:border-white/30"
+                }`}
+              >
+                <Image src={src} alt="" fill sizes="56px" className="object-cover" />
+              </button>
+            ))}
+          </div>
+        )}
+        {galleryImages.length <= 1 && <div className="mb-5" />}
 
         {/* Header */}
         <div className="mb-4">
@@ -89,7 +111,9 @@ export function AchievementModal({ achievement, onClose }: AchievementModalProps
         </div>
 
         {/* Full description */}
-        <p className="text-[14px] text-muted leading-relaxed">{achievement.description}</p>
+        <p className="text-[14px] text-muted leading-relaxed whitespace-pre-line">
+          {achievement.description}
+        </p>
 
         {/* Links */}
         {achievement.links && achievement.links.length > 0 && (

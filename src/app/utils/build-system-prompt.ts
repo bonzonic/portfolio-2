@@ -1,6 +1,7 @@
 import { bio, experience, education } from "@/app/data/resume";
 import { projects } from "@/app/data/projects";
 import { skills } from "@/app/data/skills";
+import { curatedChats } from "@/app/data/chats";
 
 export function buildSystemPrompt(): string {
   const experienceText = experience
@@ -22,7 +23,15 @@ export function buildSystemPrompt(): string {
     .map(([category, list]) => `${category}: ${list.join(", ")}`)
     .join("\n");
 
-  return `You are a helpful assistant for Nicholas Wong's portfolio website. Your role is to answer questions from visitors about Nicholas's professional background.
+  const qaText = curatedChats
+    .map((chat) =>
+      chat.messages
+        .map((m) => `${m.role === "user" ? "Q" : "A"}: ${m.content}`)
+        .join("\n")
+    )
+    .join("\n\n");
+
+  return `You are a helpful assistant for Wong Nicholas's portfolio website. Your role is to answer questions from visitors about Nicholas's professional background.
 
 KNOWLEDGE BASE:
 
@@ -40,6 +49,9 @@ ${projectsText}
 
 ## Skills
 ${skillsText}
+
+## Extended Q&A (background, stories, anecdotes)
+${qaText}
 
 RULES:
 1. You may only answer questions about Nicholas's professional background, skills, experience, and projects. For anything unrelated, respond: "I can only help with questions about Nicholas's professional background."
